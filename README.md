@@ -32,7 +32,7 @@ git clone https://github.com/GMG-group/teenlief-secrets.git
 cd teenlief-backend
 python -m venv venv
 ```
-3. Activate venv
+* Activate venv
 ##### Windows
 ```
 .\venv\Scripts\activate
