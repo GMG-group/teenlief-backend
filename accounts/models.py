@@ -14,6 +14,8 @@ class User(AbstractUser):
         validators=[RegexValidator(r"^010-?[1-9]\d{3}-?\d{4}$")],
     )
 
+    gender = models.CharField(max_length=1, blank=True, choices=GenderChoices.choices)
+
     @property
     def name(self):
         return f"{self.first_name} {self.last_name}"
