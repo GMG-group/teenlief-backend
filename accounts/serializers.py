@@ -5,7 +5,6 @@ from .models import User
 
 class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField()
-    gender = serializers.CharField()
     gender = serializers.ChoiceField(choices=User.GenderChoices)
 
     def get_cleaned_data(self):
