@@ -6,8 +6,6 @@ from dj_rest_auth.registration.views import SocialLoginView
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import redirect
-from rest_framework.views import APIView
-from api.mixins import PublicApiMixin
 import requests
 from .models import User
 from rest_framework import status
