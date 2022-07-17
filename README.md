@@ -5,7 +5,7 @@ TeenLief
 Tech Stack
 ----------
 * WSGI
-    * Django v4.0.5 - Backend Framework
+    * Django v3.2.14 - Backend Framework
     * Django Rest Framework v3.13.1
 * DATABASE
     * MySQL v8.0.29 - Oracle Cloud
