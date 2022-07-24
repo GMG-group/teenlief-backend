@@ -10,15 +10,20 @@ class User(AbstractUser):
         MALE = "M", "남성"
         FEMALE = "F", "여성"
 
+    class RoleChoices(models.TextChoices):
+        MALE = "Helper", "헬퍼"
+        FEMALE = "Teen", "청소년"
+
     phone_number = models.CharField(
         max_length=13,
         blank=True,
         validators=[RegexValidator(r"^010-?[1-9]\d{4}-?\d{4}$")],
     )
     gender = models.CharField(max_length=1, blank=True, choices=GenderChoices.choices)
-    username = None
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=150)
+    role = models.CharField(max_length=10, choices=RoleChoices.choices)
+    username = None
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name']
 
