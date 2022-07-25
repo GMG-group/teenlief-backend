@@ -11,8 +11,8 @@ class User(AbstractUser):
         FEMALE = "F", "여성"
 
     class RoleChoices(models.TextChoices):
-        MALE = "Helper", "헬퍼"
-        FEMALE = "Teen", "청소년"
+        HELPER = "Helper", "헬퍼"
+        TEEN = "Teen", "청소년"
 
     phone_number = models.CharField(
         max_length=13,
