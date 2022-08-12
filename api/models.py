@@ -7,11 +7,11 @@ class Marker(models.Model):
     latitude = models.DecimalField(max_digits=20, decimal_places=10)  # 경도
     image = models.ImageField(blank=True, null=True, upload_to='images/')  # 사진
     explanation = models.TextField()  # 설명
-    helper = models.ForeignKey(User, related_name='helper', on_delete=models.SET_NULL)
+    helper = models.ForeignKey(User, related_name='helper', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)  # 올린 시간
 
 
-class promise(models.Model):
-    teen = models.ForeignKey(User, related_name='teen', on_delete=models.SET_NULL)
+class Promise(models.Model):
+    teen = models.ForeignKey(User, related_name='teen', on_delete=models.CASCADE)
     time = models.DateTimeField(blank=False)
-    marker = models.ForeignKey(Marker, related_name='marker', on_delete=models.CASCADE, blank=False)
+    marker = models.ForeignKey(Marker, related_name='promises', on_delete=models.CASCADE, blank=False)
