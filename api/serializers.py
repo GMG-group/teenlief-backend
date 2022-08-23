@@ -1,6 +1,4 @@
 from rest_framework import serializers
-
-from accounts.serializers import CustomRegisterSerializer
 from .models import Marker, Promise
 
 
