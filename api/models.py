@@ -2,12 +2,17 @@ from django.db import models
 from accounts.models import User
 
 
+class Tag(models.Model):
+    tag = models.CharField(max_length=20)
+
+
 class Marker(models.Model):
     longitude = models.DecimalField(max_digits=20, decimal_places=14)  # 위도
     latitude = models.DecimalField(max_digits=20, decimal_places=14)  # 경도
     image = models.ImageField(blank=True, null=True, upload_to='images/')  # 사진
     explanation = models.TextField()  # 설명
     helper = models.ForeignKey(User, related_name='helper', on_delete=models.CASCADE)
+    tag = models.ManyToManyField(Tag)
     created_at = models.DateTimeField(auto_now_add=True)  # 올린 시간
 
 
