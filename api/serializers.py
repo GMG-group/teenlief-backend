@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Marker, Promise
+from .models import Marker, Promise, Tag
 
 
 class PromiseSerializer(serializers.ModelSerializer):
@@ -15,3 +15,9 @@ class MarkerSerializer(serializers.ModelSerializer):
         model = Marker
         fields = '__all__'
         read_only_fields = ['helper']
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
