@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     # My apps
     'accounts',
     'api',
+    'chat',
 
     # Installed Apps
     'rest_framework',
@@ -74,6 +75,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth.registration',
     'allauth.socialaccount.providers.google',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -189,3 +191,14 @@ SIMPLE_JWT = {
 
 
 MEDIA_URL = '/media/'
+
+# Channels
+ASGI_APPLICATION = 'teenlief.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [get_secret("REDIS_HOST")]
+        },
+    },
+}
