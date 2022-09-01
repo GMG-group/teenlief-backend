@@ -22,8 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # TODO: 배포할 땐 항상 False로 변경
 DEBUG = False
 
-secret_file = os.path.join(BASE_DIR, 'secrets.json')
 if DEBUG:
+    secret_file = os.path.join(BASE_DIR, 'secrets.json')
     with open(secret_file) as f:
         secrets = json.loads(f.read())
 
