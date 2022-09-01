@@ -4,7 +4,7 @@ async-timeout==4.0.2
 attrs==22.1.0
 autobahn==22.7.1
 Automat==20.2.0
-certifi @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_83242e7e-f82d-4a71-8ef2-9d71d212d249gu_wxmeq/croots/recipe/certifi_1655968827803/work/certifi
+certifi==2022.6.15
 cffi==1.15.1
 channels==3.0.5
 channels-redis==3.4.1
@@ -26,7 +26,7 @@ hyperlink==21.0.0
 idna==3.3
 incremental==21.3.0
 msgpack==1.0.4
-mysqlclient @ file:///opt/concourse/worker/volumes/live/3e2c08bc-c6d4-44b9-6985-8c1059f99ec2/volume/mysqlclient_1609786255460/work
+mysqlclient==2.0.3
 oauthlib==3.2.0
 Pillow==9.2.0
 pyasn1==0.4.8
