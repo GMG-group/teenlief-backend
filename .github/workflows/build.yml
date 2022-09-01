@@ -1,4 +1,4 @@
-name: Nossu Backend CD
+name: teenlief Backend CD
 
 on:
   push:
