@@ -1,6 +1,5 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from chat.models import ChatLog, ChatRoom
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -39,7 +38,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
 
-        ChatLog.objects.create(room=ChatRoom.objects.filter(room_name=self.room_name).first(), send_user=self.scope['user'], content=message)
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
