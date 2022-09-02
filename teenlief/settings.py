@@ -11,20 +11,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
 
 # TODO: 배포할 땐 항상 False로 변경
-DEBUG = False
-
-if DEBUG:
-    secret_file = os.path.join(BASE_DIR, 'secrets.json')
-    with open(secret_file) as f:
-        secrets = json.loads(f.read())
-
+DEBUG = True
 
 def get_env_variable(var_name):
     try:
-        if DEBUG:
-            return secrets[var_name]
-        else:
-            return os.environ[var_name]
+        print(os.environ[var_name])
+        return os.environ[var_name]
     except KeyError:
         error_msg = "Set the {} environment variable".format(var_name)
     raise ImproperlyConfigured(error_msg)
