@@ -36,7 +36,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             sleep 10s
-            sudo bash /app/clean.sh
-            sudo docker volume rm app_teenlief-backend
-            cd /app
-            sudo docker compose up -d
+            sudo bash up.sh
