@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
 
 # TODO: 배포할 땐 항상 False로 변경
-DEBUG = True
+DEBUG = False
 
 if DEBUG:
     secret_file = os.path.join(BASE_DIR, 'secrets.json')
