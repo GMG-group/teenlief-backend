@@ -41,10 +41,6 @@ def get_env_variable(var_name):
 
 SECRET_KEY = get_env_variable("SECRET_KEY")
 
-for key, value in secrets.items():
-    setattr(sys.modules[__name__], key, value)
-    print(key, value)
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
