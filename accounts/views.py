@@ -13,7 +13,7 @@ from .models import User
 from rest_framework import status
 
 state = get_env_variable('STATE')
-BASE_URL = 'http://127.0.0.1:8000/'
+BASE_URL = get_env_variable('BASE_URL')
 GOOGLE_CALLBACK_URI = BASE_URL + 'api/accounts/v1/login/google/callback/'
 
 class GoogleLogin(SocialLoginView):  # if you want to use Authorization Code Grant, use this
