@@ -1,7 +1,7 @@
 import hashlib
 
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from accounts.models import User
 from chat.models import ChatRoom
@@ -30,7 +30,7 @@ def room(request, room_name):
 
         else:
             # 기존 로그 리턴 및 채팅방 입장
-            chattings = ChatRoom.objects.get(room_name=hashed_room_name).chatlog_set.all()
+            chattings = get_object_or_404(ChatRoom, room_name=hashed_room_name).chatlog_set.all()
             print(chattings)
 
         return render(request, 'chat/room.html', {
