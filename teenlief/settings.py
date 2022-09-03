@@ -14,10 +14,18 @@ os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
 DEBUG = False
 
 
+if DEBUG:
+    secret_file = os.path.join(BASE_DIR, 'secrets.json')
+    with open(secret_file) as f:
+        secrets = json.loads(f.read())
+
+
 def get_env_variable(var_name):
     try:
-        print(os.environ[var_name])
-        return os.environ[var_name]
+        if DEBUG:
+            return secrets[var_name]
+        else:
+            return os.environ[var_name]
     except KeyError:
         error_msg = "Set the {} environment variable".format(var_name)
     raise ImproperlyConfigured(error_msg)
