@@ -11,7 +11,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
 
 # TODO: 배포할 땐 항상 False로 변경
-DEBUG = True
+DEBUG = False
+
 
 def get_env_variable(var_name):
     try:
