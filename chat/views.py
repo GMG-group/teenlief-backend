@@ -7,6 +7,7 @@ from accounts.models import User
 from chat.models import ChatRoom
 
 from teenlief import settings
+from teenlief.settings import get_env_variable
 
 
 def index(request):
@@ -21,7 +22,7 @@ def room(request, room_name):
 
     chattings = []
     if request.user.id == int(teen_id) or request.user.id == int(helper_id):
-        hashed_room_name = hashlib.sha256((teen_id + getattr(settings, 'SECRET_KEY') + helper_id).encode()).hexdigest()
+        hashed_room_name = hashlib.sha256((teen_id + get_env_variable(settings, 'SECRET_KEY') + helper_id).encode()).hexdigest()
 
         if not (ChatRoom.objects.filter(Q(user1_id=teen_id) & Q(user2_id=helper_id)).exists() or ChatRoom.objects.filter(Q(user1_id=helper_id) & Q(user2_id=teen_id)).exists()):
             # 채팅방 생성
