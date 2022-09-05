@@ -20,9 +20,16 @@
             + '/'
         );
 
+        chatSocket.onopen = function(e) {
+            {% for item in chattings %}
+            console.log({{ item.send_user.id }});
+            document.querySelector('#chat-log').value += '{{ item.send_user.id }}: {{ item.content }}\n';
+            {% endfor %}
+        };
+
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
+            document.querySelector('#chat-log').value += '{{ request.user.id }}: ' + (data.message + '\n');
         };
 
         chatSocket.onclose = function(e) {
