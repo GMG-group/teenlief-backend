@@ -43,7 +43,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         from chat.models import ChatLog, ChatRoom
         await database_sync_to_async(ChatLog.objects.create)(
             room=ChatRoom.objects.get(room_name=self.room_name),
-            send_user=self.scope['user'],
+            user=self.scope['user'],
             content=message
         )
 

@@ -19,7 +19,6 @@ class MarkerViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class PromiseViewSet(viewsets.ModelViewSet):
     queryset = Promise.objects.all()
     serializer_class = PromiseSerializer

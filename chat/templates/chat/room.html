@@ -23,7 +23,7 @@
         chatSocket.onopen = function(e) {
             {% for item in chattings %}
             console.log({{ item.send_user.id }});
-            document.querySelector('#chat-log').value += '{{ item.send_user.id }}: {{ item.content }}\n';
+            document.querySelector('#chat-log').value += '{{ item.user.id }}: {{ item.content }}\n';
             {% endfor %}
         };
 
