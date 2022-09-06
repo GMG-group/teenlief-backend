@@ -17,6 +17,12 @@ class MarkerSerializer(serializers.ModelSerializer):
         read_only_fields = ['helper']
 
 
+class MarkerSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Marker
+        fields = ('latitude', 'longitude')
+
+
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
