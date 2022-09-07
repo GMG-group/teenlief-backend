@@ -16,6 +16,14 @@ class MarkerSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['helper']
 
+    def create(self, validated_data):
+        tags = validated_data.pop('tag')
+        marker = Marker.objects.create(**validated_data)
+
+        for tag in tags:
+            marker.tag.add(tag)
+        return marker
+
 
 class MarkerSimpleSerializer(serializers.ModelSerializer):
     class Meta:
