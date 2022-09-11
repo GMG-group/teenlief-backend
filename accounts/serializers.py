@@ -15,3 +15,10 @@ class CustomRegisterSerializer(RegisterSerializer):
         data['role'] = self.validated_data.get('role', '')
 
         return data
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['email', 'gender', 'first_name', 'role', 'phone_number']
