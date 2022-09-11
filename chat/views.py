@@ -3,6 +3,7 @@ import hashlib
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from accounts.models import User
@@ -44,6 +45,7 @@ def room(request, room_name):
 class ChatViewSet(viewsets.ModelViewSet):
     queryset = ChatRoom.objects.all()
     serializer_class = ChatRoomSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         return self.queryset.filter(Q(teen=self.request.user) | Q(helper=self.request.user))

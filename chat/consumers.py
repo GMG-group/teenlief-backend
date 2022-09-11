@@ -2,6 +2,10 @@ import json
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from accounts.models import User
+from chat.models import ChatLog, ChatRoom
+
+from django.shortcuts import get_object_or_404
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -37,18 +41,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
+        # create chatlog
+        await self.create_chatlog(message)
+
     async def chat_message(self, event):
         message = event['message']
-
-        from chat.models import ChatLog, ChatRoom
-        await database_sync_to_async(ChatLog.objects.create)(
-            room=ChatRoom.objects.get(room_name=self.room_name),
-            user=self.scope['user'],
-            content=message
-        )
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message
         }))
 
+    @database_sync_to_async
+    def create_chatlog(self, message):
+        print(self.scope['user'])
+        ChatLog.objects.create(
+            room=ChatRoom.objects.get(room_name=self.room_name),
+            user=get_object_or_404(User, id=self.scope['user'].id),
+            content=message
+        )
