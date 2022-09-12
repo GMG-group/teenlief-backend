@@ -2,8 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 
 from accounts.models import User
-from api.models import Marker, Promise
-from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer
+from api.models import Marker, Promise, Tag
+from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer
 
 
 class MarkerViewSet(viewsets.ModelViewSet):
@@ -27,3 +27,8 @@ class PromiseViewSet(viewsets.ModelViewSet):
 class MarkerSimpleViewSet(viewsets.ModelViewSet):
     queryset = Marker.objects.all()
     serializer_class = MarkerSimpleSerializer
+
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
