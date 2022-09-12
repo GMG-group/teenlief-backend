@@ -6,8 +6,10 @@ router = DefaultRouter()
 router.register('marker', views.MarkerViewSet)
 router.register('promise', views.PromiseViewSet)
 router.register('marker-simple', views.MarkerSimpleViewSet)
+router.register('tag', views.TagViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
     path('accounts/v1/', include('accounts.urls')),
+    path('chat/', include('chat.urls')),
 ]

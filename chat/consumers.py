@@ -2,6 +2,10 @@ import json
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from accounts.models import User
+from chat.models import ChatLog, ChatRoom
+
+from django.shortcuts import get_object_or_404
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -26,29 +30,34 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
+        message = text_data_json['content']
 
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message
+                'content': message
             }
         )
 
-    async def chat_message(self, event):
-        message = event['message']
+        # create chatlog
+        await self.create_chatlog(message)
 
-        from chat.models import ChatLog, ChatRoom
-        await database_sync_to_async(ChatLog.objects.create)(
-            room=ChatRoom.objects.get(room_name=self.room_name),
-            send_user=self.scope['user'],
-            content=message
-        )
+    async def chat_message(self, event):
+        message = event['content']
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            'message': message
+            'content': message,
+            'user': {"first_name": self.scope['user'].first_name}
         }))
 
+    @database_sync_to_async
+    def create_chatlog(self, message):
+        print(self.scope['user'])
+        ChatLog.objects.create(
+            room=ChatRoom.objects.get(room_name=self.room_name),
+            user=get_object_or_404(User, id=self.scope['user'].id),
+            content=message
+        )

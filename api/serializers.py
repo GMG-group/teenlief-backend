@@ -28,7 +28,7 @@ class MarkerSerializer(serializers.ModelSerializer):
 class MarkerSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marker
-        fields = ('latitude', 'longitude')
+        fields = ('id', 'latitude', 'longitude')
 
 
 class TagSerializer(serializers.ModelSerializer):
