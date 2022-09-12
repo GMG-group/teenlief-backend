@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from accounts.serializers import UserSerializer
 from .models import Marker, Promise, Tag
 
 
@@ -10,6 +12,7 @@ class PromiseSerializer(serializers.ModelSerializer):
 
 class MarkerSerializer(serializers.ModelSerializer):
     promises = PromiseSerializer(read_only=True, many=True)
+    helper = UserSerializer(read_only=True)
 
     class Meta:
         model = Marker
