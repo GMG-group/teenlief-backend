@@ -13,4 +13,4 @@ class ChatLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatLog
         fields = '__all__'
-        depth = 2
+        depth = 1
