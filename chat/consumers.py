@@ -72,7 +72,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 teen = room.teen
                 helper = room.helper
 
-                print(promise_time_list)
                 promise = Promise.objects.create(time=promise_time, teen=teen, helper=helper, marker_id=promise_time_list[6])
 
         ChatLog.objects.create(
