@@ -5,6 +5,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from accounts.models import User
 from accounts.serializers import UserSerializer
 from chat.models import ChatLog, ChatRoom
+from api.models import Promise
 
 from django.shortcuts import get_object_or_404
 
@@ -60,6 +61,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def create_chatlog(self, message):
+        if message[0:3] == '/약속':
+            promise_time_list = message.split('/')
+            if promise_time_list[6] == 'false':
+                pass
+            else:
+                promise_time = "2022-" + promise_time_list[2] + "-" + promise_time_list[3] + " " + promise_time_list[4] + ":" + promise_time_list[5]
+
+                room = get_object_or_404(ChatRoom, room_name=self.room_name)
+                teen = room.teen
+                helper = room.helper
+
+                print(promise_time_list)
+                promise = Promise.objects.create(time=promise_time, teen=teen, helper=helper, marker_id=promise_time_list[6])
+
         ChatLog.objects.create(
             room=ChatRoom.objects.get(room_name=self.room_name),
             user=get_object_or_404(User, id=self.scope['user'].id),
