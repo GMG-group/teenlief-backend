@@ -1,4 +1,5 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from accounts.models import User
@@ -27,3 +28,12 @@ class MarkerSimpleViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+
+class CheckUserMarkerExistsAPI(APIView):
+    def get(self, request, user_id):
+        marker = Marker.objects.filter(helper_id=user_id)
+        if marker.exists():
+            return Response(marker[0].id)
+        else:
+            return Response(False)
