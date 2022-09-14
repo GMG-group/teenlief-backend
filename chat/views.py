@@ -34,11 +34,11 @@ def room(request, room_name):
         else:
             # 기존 로그 리턴 및 채팅방 입장
             chattings = get_object_or_404(ChatRoom, room_name=hashed_room_name).chatlog_set.all()
-            print(chattings)
 
         return render(request, 'chat/room.html', {
             'room_name': hashed_room_name,
             'chattings': chattings,
+            'token': request.__dict__['COOKIES']['teenlief-auth']
         })
 
 
