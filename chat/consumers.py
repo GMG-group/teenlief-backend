@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -67,6 +68,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 pass
             else:
                 promise_time = "2022-" + promise_time_list[2] + "-" + promise_time_list[3] + " " + promise_time_list[4] + ":" + promise_time_list[5]
+
+                # 시간 객체로 변환
+                promise_time = datetime.datetime.strptime(promise_time, '%Y-%m-%d %H:%M')
+                # 한국 시간으로 변환
+                promise_time = promise_time + datetime.timedelta(hours=9)
 
                 room = get_object_or_404(ChatRoom, room_name=self.room_name)
                 teen = room.teen
