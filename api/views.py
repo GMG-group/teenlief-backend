@@ -1,4 +1,5 @@
-from rest_framework import viewsets, status, generics
+from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from accounts.models import User
@@ -33,3 +34,12 @@ class TagViewSet(viewsets.ModelViewSet):
 class ShelterViewSet(viewsets.ModelViewSet):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
+
+
+class CheckUserMarkerExistsAPI(APIView):
+    def get(self, request, user_id):
+        marker = Marker.objects.filter(helper_id=user_id)
+        if marker.exists():
+            return Response(marker[0].id)
+        else:
+            return Response(False)
