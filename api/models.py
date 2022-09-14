@@ -22,8 +22,8 @@ class Tag(models.Model):
 
 
 class Marker(models.Model):
-    longitude = models.DecimalField(max_digits=20, decimal_places=14)  # 위도
-    latitude = models.DecimalField(max_digits=20, decimal_places=14)  # 경도
+    longitude = models.DecimalField(max_digits=20, decimal_places=15)  # 위도
+    latitude = models.DecimalField(max_digits=20, decimal_places=15)  # 경도
     image = models.FileField(blank=True, null=True, upload_to=date_upload_to, max_length=300)  # 사진
     explanation = models.TextField()  # 설명
     helper = models.ForeignKey(User, related_name='helper', on_delete=models.CASCADE)
