@@ -34,11 +34,11 @@ def room(request, room_name):
         else:
             # 기존 로그 리턴 및 채팅방 입장
             chattings = get_object_or_404(ChatRoom, room_name=hashed_room_name).chatlog_set.all()
-            print(chattings)
 
         return render(request, 'chat/room.html', {
             'room_name': hashed_room_name,
             'chattings': chattings,
+            'token': request.__dict__['COOKIES']['teenlief-auth']
         })
 
 
@@ -49,6 +49,31 @@ class ChatViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(Q(teen=self.request.user) | Q(helper=self.request.user))
+
+    def create(self, request):
+        helper_id = request.data['helper_id']
+        teen_id = request.data['teen_id']
+
+        if request.user.id == int(teen_id) or request.user.id == int(helper_id):
+            hashed_room_name = hashlib.sha256(
+                (teen_id + get_env_variable('SECRET_KEY') + helper_id).encode()).hexdigest()
+
+            if not (ChatRoom.objects.filter(
+                    Q(teen_id=teen_id) & Q(helper_id=helper_id)).exists() or ChatRoom.objects.filter(
+                    Q(helper_id=helper_id) & Q(teen_id=teen_id)).exists()):
+                # 채팅방 생성
+                chatroom = ChatRoom.objects.create(room_name=hashed_room_name, teen=User.objects.get(id=teen_id),
+                                        helper=User.objects.get(id=helper_id))
+
+            else:
+                # 기존 로그 리턴 및 채팅방 입장
+                chatroom = get_object_or_404(ChatRoom, room_name=hashed_room_name)
+
+            serializer = ChatRoomSerializer(chatroom)
+            return Response(serializer.data)
+
+        else:
+            return Response(status=403)
 
     def retrieve(self, request, pk=None):
         room = get_object_or_404(ChatRoom, id=pk)

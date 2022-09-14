@@ -17,7 +17,7 @@
         + window.location.host
         + '/ws/chat/'
         + roomName
-        + '?token=' + 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYzNDY0NjM0LCJpYXQiOjE2NjI4NTk4MzQsImp0aSI6IjRiNmNmMWFiZDAyNDQ0NTk4OThjMmQ4ODFjM2JhYjY3IiwidXNlcl9pZCI6MTh9.uEGWNvIXgH4IvNYx43HoEMaWFdfA3JxUKhfex0aoqY0'
+        + '?token=' + '{{ token }}'
     );
 
     chatSocket.onopen = function(e) {
