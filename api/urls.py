@@ -7,6 +7,7 @@ router.register('marker', views.MarkerViewSet)
 router.register('promise', views.PromiseViewSet)
 router.register('marker-simple', views.MarkerSimpleViewSet)
 router.register('tag', views.TagViewSet)
+router.register('shelter', views.ShelterViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -3,7 +3,6 @@ from accounts.models import User
 from django.utils import timezone
 from uuid import uuid4
 
-
 def date_upload_to(instance, filename):
     # upload_to="%Y/%m/%d" 처럼 날짜로 세분화
     ymd_path = timezone.now().strftime('%Y/%m/%d')
@@ -17,7 +16,6 @@ def date_upload_to(instance, filename):
         ymd_path,
         uuid_name + extension,
         ])
-
 
 class Tag(models.Model):
     tag = models.CharField(max_length=20)
@@ -39,3 +37,11 @@ class Promise(models.Model):
     time = models.DateTimeField(blank=False)
     marker = models.ForeignKey(Marker, related_name='promises', on_delete=models.CASCADE, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Shelter(models.Model):
+    longitude = models.DecimalField(max_digits=20, decimal_places=15)  # 위도
+    latitude = models.DecimalField(max_digits=20, decimal_places=15)  # 경도
+    phone_number = models.CharField(max_length=20, null=True)
+    explanation = models.TextField()  # 설명
+    name = models.CharField(max_length=255)
