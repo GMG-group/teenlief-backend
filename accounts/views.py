@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 import requests
 
 from teenlief.settings import get_env_variable
-from .models import User
+from accounts.models import User
 from rest_framework import status
 
 state = get_env_variable('STATE')

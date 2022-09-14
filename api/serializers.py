@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.serializers import UserSerializer
-from .models import Marker, Promise, Tag, Shelter
+from api.models import Marker, Promise, Tag, Shelter
 
 
 class PromiseSerializer(serializers.ModelSerializer):
