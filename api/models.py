@@ -11,7 +11,7 @@ def date_upload_to(instance, filename):
     # 확장자 추출
     extension = '.jpeg'
     # 결합 후 return
-    return '/'.join([
+    return '/media/'.join([
         'images',
         ymd_path,
         uuid_name + extension,
