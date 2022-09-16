@@ -13,6 +13,8 @@ Tech Stack
     * Github Actions(for CI/CD)
     * Docker
 
+![FlowChart (2)](https://user-images.githubusercontent.com/50871137/190545904-3b0801e8-336e-4477-be54-e4f9a400ea15.png)
+
 ## Prerequisites
 * Python3(3.10 recommended)
 * pip
