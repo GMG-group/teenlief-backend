@@ -47,3 +47,10 @@ class Shelter(models.Model):
     phone_number = models.CharField(max_length=20, null=True)
     explanation = models.TextField()  # 설명
     name = models.CharField(max_length=255)
+
+
+class PointLog(models.Model):
+    sender = models.ForeignKey(User, related_name='point_log_sender', on_delete=models.PROTECT)
+    receiver = models.ForeignKey(User, related_name='point_log_receiver', on_delete=models.PROTECT)
+    point = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
