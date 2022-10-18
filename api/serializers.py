@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.serializers import UserSerializer
-from api.models import Marker, Promise, Tag, Shelter
+from api.models import Marker, Promise, Tag, Shelter, Review
 
 
 class PromiseSerializer(serializers.ModelSerializer):
@@ -43,4 +43,9 @@ class TagSerializer(serializers.ModelSerializer):
 class ShelterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shelter
+        fields = '__all__'
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
         fields = '__all__'
