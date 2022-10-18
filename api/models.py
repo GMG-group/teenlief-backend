@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.db import models
 from accounts.models import User
 from django.utils import timezone
@@ -54,3 +55,12 @@ class PointLog(models.Model):
     receiver = models.ForeignKey(User, related_name='point_log_receiver', on_delete=models.PROTECT)
     point = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+class Review(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    helper_id = models.IntegerField()
+    stars = models.IntegerField()
+    content = models.CharField(max_length=500)
+    date = models.DateTimeField()
+    def __str__(self):
+        self.author
