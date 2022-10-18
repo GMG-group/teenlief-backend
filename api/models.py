@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from accounts.models import User
 from django.utils import timezone
@@ -47,3 +48,14 @@ class Shelter(models.Model):
     phone_number = models.CharField(max_length=20, null=True)
     explanation = models.TextField()  # 설명
     name = models.CharField(max_length=255)
+
+
+class Review(models.Model):
+    author = models.ForeignKey(User, related_name = 'review_author', on_delete=models.CASCADE)
+    helper = models.ForeignKey(User, related_name = 'review_helper', on_delete=models.SET_NULL, null=True)
+    stars = models.FloatField()
+    todo_review = models.BooleanField()
+    content = models.CharField(max_length=500)
+    date = models.DateTimeField()
+    def __str__(self):
+        return self.author
