@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-from email.policy import default
-=======
-from tkinter import CASCADE
->>>>>>> 8c700e821eb5547e6de524cec4ada3841dfa581c
 from django.db import models
 from accounts.models import User
 from django.utils import timezone
@@ -54,29 +49,20 @@ class Shelter(models.Model):
     name = models.CharField(max_length=255)
 
 
-<<<<<<< HEAD
 class Review(models.Model):
-    author = models.ForeignKey(User, related_name = 'review_author', on_delete=models.CASCADE)
-    helper = models.ForeignKey(User, related_name = 'review_helper', on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(User, related_name='review_author', on_delete=models.CASCADE)
+    helper = models.ForeignKey(User, related_name='review_helper', on_delete=models.SET_NULL, null=True)
     stars = models.FloatField()
     todo_review = models.BooleanField()
     content = models.CharField(max_length=500)
     date = models.DateTimeField()
+
     def __str__(self):
         return self.author
-=======
+
+
 class PointLog(models.Model):
     sender = models.ForeignKey(User, related_name='point_log_sender', on_delete=models.PROTECT)
     receiver = models.ForeignKey(User, related_name='point_log_receiver', on_delete=models.PROTECT)
     point = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-
-class Review(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    helper_id = models.IntegerField()
-    stars = models.IntegerField()
-    content = models.CharField(max_length=500)
-    date = models.DateTimeField()
-    def __str__(self):
-        return str(self.author)
->>>>>>> 8c700e821eb5547e6de524cec4ada3841dfa581c
