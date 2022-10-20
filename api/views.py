@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from accounts.models import User
 from api.models import Marker, Promise, Tag, Shelter
 from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, \
-    ShelterSerializer
+    ShelterSerializer, MyMarkerSerializer
 
 
 class MarkerViewSet(viewsets.ModelViewSet):
@@ -34,6 +34,26 @@ class TagViewSet(viewsets.ModelViewSet):
 class ShelterViewSet(viewsets.ModelViewSet):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
+
+
+class MyMarkerViewSet(viewsets.ModelViewSet):
+    queryset = Marker.objects.all()
+    serializer_class = MyMarkerSerializer
+
+    def list(self, request):
+        user = request.user
+        queryset = self.filter_queryset(self.get_queryset().filter(helper=user))
+        #
+        # queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 
 class CheckUserMarkerExistsAPI(APIView):
