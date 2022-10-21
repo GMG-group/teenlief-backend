@@ -38,7 +38,7 @@ class ShelterViewSet(viewsets.ModelViewSet):
 
 class MyMarkerViewSet(viewsets.ModelViewSet):
     queryset = Marker.objects.all()
-    serializer_class = MyMarkerSerializer
+    serializer_class = MarkerSerializer
 
     def list(self, request):
         user = request.user

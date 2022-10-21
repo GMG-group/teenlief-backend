@@ -45,8 +45,3 @@ class ShelterSerializer(serializers.ModelSerializer):
         model = Shelter
         fields = '__all__'
 
-
-class MyMarkerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Marker
-        fields = '__all__'
