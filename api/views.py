@@ -21,13 +21,12 @@ class MarkerViewSet(viewsets.ModelViewSet):
         serializer_class = MyMarkerSerializer
         user = request.user
         queryset = self.filter_queryset(self.get_queryset().filter(helper=user))
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = serializer_class(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = serializer_class(queryset, many=True)
+        serializer = serializer_class(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
 
