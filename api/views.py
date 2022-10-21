@@ -1,11 +1,12 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from accounts.models import User
 from api.models import Marker, Promise, Tag, Shelter
 from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, \
-    ShelterSerializer
+    ShelterSerializer, MyMarkerSerializer
 
 
 class MarkerViewSet(viewsets.ModelViewSet):
@@ -14,6 +15,20 @@ class MarkerViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(helper=self.request.user)
+
+    @action(detail=False, methods=['get'])
+    def my(self, request):
+        serializer_class = MyMarkerSerializer
+        user = request.user
+        queryset = self.filter_queryset(self.get_queryset().filter(helper=user))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = serializer_class(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = serializer_class(queryset, many=True)
+        return Response(serializer.data)
 
 
 class PromiseViewSet(viewsets.ModelViewSet):
@@ -34,26 +49,6 @@ class TagViewSet(viewsets.ModelViewSet):
 class ShelterViewSet(viewsets.ModelViewSet):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
-
-
-class MyMarkerViewSet(viewsets.ModelViewSet):
-    queryset = Marker.objects.all()
-    serializer_class = MarkerSerializer
-
-    def list(self, request):
-        user = request.user
-        queryset = self.filter_queryset(self.get_queryset().filter(helper=user))
-        #
-        # queryset = self.filter_queryset(self.get_queryset())
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
 
 
 class CheckUserMarkerExistsAPI(APIView):

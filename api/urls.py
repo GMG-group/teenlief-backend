@@ -8,7 +8,6 @@ router.register('promise', views.PromiseViewSet)
 router.register('marker-simple', views.MarkerSimpleViewSet)
 router.register('tag', views.TagViewSet)
 router.register('shelter', views.ShelterViewSet)
-router.register('mymarker', views.MyMarkerViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
