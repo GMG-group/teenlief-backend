@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from accounts.models import User
 from api.models import Marker, Promise, Tag, Shelter
 from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, \
-    ShelterSerializer, MyMarkerSerializer
+    ShelterSerializer
 
 
 class MarkerViewSet(viewsets.ModelViewSet):
