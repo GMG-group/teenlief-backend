@@ -26,7 +26,7 @@ class MarkerViewSet(viewsets.ModelViewSet):
             serializer = serializer_class(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = serializer_class(queryset, many=True, context={'request': request})
+        serializer = serializer_class(queryset, many=True, context={'request': request}) # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
         return Response(serializer.data)
 
 
