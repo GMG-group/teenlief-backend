@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from accounts.models import User
+from api.models import HelperInfo
 
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -20,6 +21,10 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.gender = self.validated_data.get('gender', '')
         user.role = self.validated_data.get('role', '')
         user.save(update_fields=['first_name', 'gender', 'role'])
+
+        if user.role == 'Helper':
+            helperInfo = HelperInfo(user.id, 0, 0)
+            helperInfo.save()
 
 
 class UserSerializer(serializers.ModelSerializer):
