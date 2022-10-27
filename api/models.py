@@ -53,7 +53,7 @@ class Shelter(models.Model):
 class Review(models.Model):
     author = models.ForeignKey(User, related_name='review_author', on_delete=models.CASCADE)
     helper = models.ForeignKey(User, related_name='review_helper', on_delete=models.SET_NULL, null=True)
-    stars = models.DecimalField(max_digits=20, decimal_places=15)
+    stars = models.DecimalField(max_digits=3, decimal_places=2)
     todo_review = models.BooleanField()
     content = models.CharField(max_length=500)
     date = models.DateTimeField()
