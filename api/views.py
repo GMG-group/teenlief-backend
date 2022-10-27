@@ -10,7 +10,7 @@ from accounts.models import User
 from api.models import Marker, Promise, Tag, Shelter, Review, PointLog
 from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, \
     ReviewSerializer, \
-    ShelterSerializer, PointSerializer
+    ShelterSerializer, PointSerializer, MyMarkerSerializer
 
 from django.shortcuts import get_object_or_404
 
