@@ -82,9 +82,10 @@ class PointViewSet(viewsets.ModelViewSet):
 
         if self.request.user == sender:
             if sender == receiver:
-                serializer.save(sender=sender, receiver=receiver, point=point)
-                receiver.point += point
-                receiver.save()
+                if serializer.is_valid():
+                    serializer.save(sender=sender, receiver=receiver, point=point)
+                    receiver.point += point
+                    receiver.save()
             else:
                 if sender.point >= point:
                     if serializer.is_valid():
