@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
 from accounts.models import User
+from accounts.serializers import UserSerializer
 from api.models import Marker, Promise, Tag, Shelter, Review, PointLog
 from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, \
     ReviewSerializer, \
@@ -15,6 +16,7 @@ from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSer
 from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import action
+
 
 class MarkerViewSet(viewsets.ModelViewSet):
     queryset = Marker.objects.all()
@@ -97,6 +99,7 @@ class PointViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(False, status=403)
 
+
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
@@ -114,3 +117,13 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class CertificateAPI(APIView):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        print(user)
+        user.certificated = True
+        user.save()
+        res = UserSerializer(user)
+        return Response(res.data)
