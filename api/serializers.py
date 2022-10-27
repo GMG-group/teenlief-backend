@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.serializers import UserSerializer
-from api.models import Marker, Promise, Tag, Shelter, Review
+from api.models import Marker, Promise, Tag, Shelter, Review, PointLog
 
 
 class PromiseSerializer(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class MarkerSerializer(serializers.ModelSerializer):
 class MarkerSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marker
-        fields = ('id', 'latitude', 'longitude')
+        fields = ('id', 'latitude', 'longitude', 'tag')
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -45,7 +45,20 @@ class ShelterSerializer(serializers.ModelSerializer):
         model = Shelter
         fields = '__all__'
 
+
+class PointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PointLog
+        fields = '__all__'
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
+        fields = '__all__'
+
+
+class MyMarkerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Marker
         fields = '__all__'
