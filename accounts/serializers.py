@@ -8,6 +8,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     first_name = serializers.CharField()
     gender = serializers.ChoiceField(choices=User.GenderChoices)
     role = serializers.ChoiceField(choices=User.RoleChoices)
+    certificated = serializers.BooleanField(read_only=True)
 
     def get_cleaned_data(self):
         data = super().get_cleaned_data()
