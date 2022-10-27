@@ -58,7 +58,7 @@ class Review(models.Model):
     date = models.DateTimeField()
 
     def __str__(self):
-        return self.author
+        return str(self.author)
 
 
 class PointLog(models.Model):

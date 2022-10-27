@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
 # from teenlief-backend.api.serializers import ReviewSerializer
 
 from accounts.models import User
@@ -8,7 +9,9 @@ from api.models import Marker, Promise, Tag, Shelter, Review
 from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, ReviewSerializer, \
     ShelterSerializer
 
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+
+from rest_framework.decorators import action
 
 class MarkerViewSet(viewsets.ModelViewSet):
     queryset = Marker.objects.all()
@@ -46,9 +49,18 @@ class CheckUserMarkerExistsAPI(APIView):
         else:
             return Response(False)
 
-class MarkerReviewListAPI(APIView):
-    def get(self, request):
-        queryset = User.objects.all()
-        print("??????????????????????????????????????????????????????", queryset)
-        # serializer = ReviewSerializer(queryset, many=True)
-        # return Response(serializer.data)
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def list(self, request):
+        queryset = Review.objects.filter(author=self.request.user)
+        serializer = ReviewSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        user = get_object_or_404(User, pk=pk)
+        queryset = Review.objects.filter(helper=user).filter(todo_review=True)
+        serializer = ReviewSerializer(queryset, many=True)
+        return Response(serializer.data)
