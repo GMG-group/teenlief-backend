@@ -7,9 +7,10 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
 from accounts.models import User
-from api.models import Marker, Promise, Tag, Shelter, Review
-from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, ReviewSerializer, \
-    ShelterSerializer
+from api.models import Marker, Promise, Tag, Shelter, Review, PointLog
+from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, \
+    ReviewSerializer, \
+    ShelterSerializer, PointSerializer
 
 from django.shortcuts import get_object_or_404
 
