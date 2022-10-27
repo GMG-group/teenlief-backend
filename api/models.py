@@ -53,7 +53,7 @@ class Shelter(models.Model):
 class Review(models.Model):
     author = models.ForeignKey(User, related_name='review_author', on_delete=models.CASCADE)
     helper = models.ForeignKey(User, related_name='review_helper', on_delete=models.SET_NULL, null=True)
-    stars = models.FloatField()
+    stars = models.DecimalField(max_digits=20, decimal_places=15)
     todo_review = models.BooleanField()
     content = models.CharField(max_length=500)
     date = models.DateTimeField()
@@ -67,3 +67,9 @@ class PointLog(models.Model):
     receiver = models.ForeignKey(User, related_name='point_log_receiver', on_delete=models.PROTECT)
     point = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+
+class HelperInfo(models.Model):
+    helper = models.OneToOneField(User, related_name="helper_info_helper", on_delete=models.CASCADE)
+    score = models.DecimalField(max_digits=3, decimal_places=2)
+    review_count = models.IntegerField()
