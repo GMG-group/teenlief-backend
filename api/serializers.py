@@ -71,6 +71,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         helperInfo.score = helperInfo.total / helperInfo.review_count
         helperInfo.save()
 
+        promise = validated_data['promise']
+        promise.reviewed = True
+        promise.save()
+
         return review
 
 

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -43,6 +44,18 @@ class MarkerViewSet(viewsets.ModelViewSet):
 class PromiseViewSet(viewsets.ModelViewSet):
     queryset = Promise.objects.all()
     serializer_class = PromiseSerializer
+
+    @action(detail=False, methods=['get'])
+    def unreviewed(self, request):
+        user = request.user
+        queryset = self.filter_queryset(self.get_queryset().filter(Q(teen=user) & Q(reviewed=False)))
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.serializer_class(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.serializer_class(queryset, many=True, context={'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
+        return Response(serializer.data)
 
 
 class MarkerSimpleViewSet(viewsets.ModelViewSet):
