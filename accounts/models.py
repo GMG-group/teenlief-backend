@@ -24,6 +24,9 @@ class User(AbstractUser):
     first_name = models.CharField(_('first name'), max_length=150)
     role = models.CharField(max_length=10, choices=RoleChoices.choices)
     username = None
+    point = models.IntegerField(default=0)
+    certificated = models.BooleanField(default=False)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name']
 

@@ -8,10 +8,13 @@ router.register('promise', views.PromiseViewSet)
 router.register('marker-simple', views.MarkerSimpleViewSet)
 router.register('tag', views.TagViewSet)
 router.register('shelter', views.ShelterViewSet)
+router.register('review', views.ReviewViewSet)
+router.register('point', views.PointViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
     path('accounts/v1/', include('accounts.urls')),
     path('chat/', include('chat.urls')),
     path('check-user-marker-exists/<int:user_id>/', views.CheckUserMarkerExistsAPI.as_view()),
+    path('certificate/', views.CertificateAPI.as_view()),
 ]

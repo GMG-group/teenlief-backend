@@ -50,8 +50,26 @@ class Shelter(models.Model):
     name = models.CharField(max_length=255)
 
 
+class Review(models.Model):
+    author = models.ForeignKey(User, related_name='review_author', on_delete=models.CASCADE)
+    helper = models.ForeignKey(User, related_name='review_helper', on_delete=models.SET_NULL, null=True)
+    stars = models.DecimalField(max_digits=3, decimal_places=2)
+    content = models.CharField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return str(self.author)
+
+
 class PointLog(models.Model):
     sender = models.ForeignKey(User, related_name='point_log_sender', on_delete=models.PROTECT)
     receiver = models.ForeignKey(User, related_name='point_log_receiver', on_delete=models.PROTECT)
     point = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+
+class HelperInfo(models.Model):
+    helper = models.OneToOneField(User, related_name="helper_info_helper", on_delete=models.CASCADE)
+    score = models.DecimalField(max_digits=3, decimal_places=2)
+    review_count = models.IntegerField()
+    total = models.DecimalField(max_digits=20, decimal_places=2)
