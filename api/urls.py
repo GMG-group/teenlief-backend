@@ -10,6 +10,7 @@ router.register('tag', views.TagViewSet)
 router.register('shelter', views.ShelterViewSet)
 router.register('review', views.ReviewViewSet)
 router.register('point', views.PointViewSet)
+router.register('helper-info', views.HelperInfoViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

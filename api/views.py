@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.views import APIView
@@ -7,14 +7,15 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
 from accounts.models import User
-from api.models import Marker, Promise, Tag, Shelter, Review, PointLog
+from api.models import Marker, Promise, Tag, Shelter, Review, PointLog, HelperInfo
 from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, \
     ReviewSerializer, \
-    ShelterSerializer, PointSerializer, MyMarkerSerializer
+    ShelterSerializer, PointSerializer, MyMarkerSerializer, HelperInfoSerializer
 
 from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import action
+
 
 class MarkerViewSet(viewsets.ModelViewSet):
     queryset = Marker.objects.all()
@@ -33,7 +34,8 @@ class MarkerViewSet(viewsets.ModelViewSet):
             serializer = serializer_class(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = serializer_class(queryset, many=True, context={'request': request}) # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
+        serializer = serializer_class(queryset, many=True, context={
+            'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
         return Response(serializer.data)
 
 
@@ -97,6 +99,7 @@ class PointViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(False, status=403)
 
+
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
@@ -114,3 +117,15 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class HelperInfoViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    queryset = HelperInfo.objects.all()
+    serializer_class = HelperInfoSerializer
+
+    def retrieve(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        queryset = HelperInfo.objects.get(helper=user)
+        serializer = HelperInfoSerializer(queryset)
+        return Response(serializer.data)
+
