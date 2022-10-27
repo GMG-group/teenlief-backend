@@ -57,6 +57,17 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = '__all__'
 
+    def create(self, validated_data):
+        review = Review.objects.create(**validated_data)
+        helper = validated_data['helper']
+        helperInfo = helper.helper_info_helper
+        helperInfo.review_count += 1
+        helperInfo.total += validated_data['stars']
+        helperInfo.score = helperInfo.total / helperInfo.review_count
+        helperInfo.save()
+
+        return review
+
 
 class MyMarkerSerializer(serializers.ModelSerializer):
     class Meta:

@@ -73,3 +73,4 @@ class HelperInfo(models.Model):
     helper = models.OneToOneField(User, related_name="helper_info_helper", on_delete=models.CASCADE)
     score = models.DecimalField(max_digits=3, decimal_places=2)
     review_count = models.IntegerField()
+    total = models.DecimalField(max_digits=20, decimal_places=2)
