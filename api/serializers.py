@@ -53,9 +53,12 @@ class PointSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+
     class Meta:
         model = Review
         fields = '__all__'
+        read_only_fields = ['author']
 
     def create(self, validated_data):
         review = Review.objects.create(**validated_data)

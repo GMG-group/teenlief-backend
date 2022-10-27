@@ -54,9 +54,8 @@ class Review(models.Model):
     author = models.ForeignKey(User, related_name='review_author', on_delete=models.CASCADE)
     helper = models.ForeignKey(User, related_name='review_helper', on_delete=models.SET_NULL, null=True)
     stars = models.DecimalField(max_digits=3, decimal_places=2)
-    todo_review = models.BooleanField()
     content = models.CharField(max_length=500)
-    date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return str(self.author)

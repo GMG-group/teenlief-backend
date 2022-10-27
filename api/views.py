@@ -111,3 +111,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
         queryset = Review.objects.filter(helper=user).filter(todo_review=True)
         serializer = ReviewSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
