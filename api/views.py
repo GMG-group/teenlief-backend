@@ -109,14 +109,23 @@ class ReviewViewSet(viewsets.ModelViewSet):
         serializer = ReviewSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    def retrieve(self, request, pk=None):
-        user = get_object_or_404(User, pk=pk)
-        queryset = Review.objects.filter(helper=user).filter(todo_review=True)
-        serializer = ReviewSerializer(queryset, many=True)
-        return Response(serializer.data)
-
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @action(detail=False, methods=['get'])
+    def my(self, request):
+        user = request.user
+        if user.role == "Helper":
+            queryset = self.filter_queryset(self.get_queryset().filter(helper=user))
+        else:
+            queryset = self.filter_queryset(self.get_queryset().filter(author=user))
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.serializer_class(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.serializer_class(queryset, many=True, context={'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
+        return Response(serializer.data)
 
 
 class HelperInfoViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
