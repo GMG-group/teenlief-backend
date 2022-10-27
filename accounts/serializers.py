@@ -13,8 +13,13 @@ class CustomRegisterSerializer(RegisterSerializer):
         data['first_name'] = self.validated_data.get('first_name', '')
         data['gender'] = self.validated_data.get('gender', '')
         data['role'] = self.validated_data.get('role', '')
-
         return data
+
+    def custom_signup(self, request, user):
+        user.first_name = self.validated_data.get('first_name', '')
+        user.gender = self.validated_data.get('gender', '')
+        user.role = self.validated_data.get('role', '')
+        user.save(update_fields=['first_name', 'gender', 'role'])
 
 
 class UserSerializer(serializers.ModelSerializer):
