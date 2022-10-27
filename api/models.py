@@ -40,6 +40,7 @@ class Promise(models.Model):
     time = models.DateTimeField(blank=False)
     marker = models.ForeignKey(Marker, related_name='promises', on_delete=models.CASCADE, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+    reviewed = models.BooleanField(default=False)
 
 
 class Shelter(models.Model):
@@ -53,6 +54,7 @@ class Shelter(models.Model):
 class Review(models.Model):
     author = models.ForeignKey(User, related_name='review_author', on_delete=models.CASCADE)
     helper = models.ForeignKey(User, related_name='review_helper', on_delete=models.SET_NULL, null=True)
+    promise = models.OneToOneField(Promise, related_name="review_promise", on_delete=models.PROTECT)
     stars = models.DecimalField(max_digits=3, decimal_places=2)
     content = models.CharField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
