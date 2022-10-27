@@ -16,8 +16,4 @@ urlpatterns = [
     path('accounts/v1/', include('accounts.urls')),
     path('chat/', include('chat.urls')),
     path('check-user-marker-exists/<int:user_id>/', views.CheckUserMarkerExistsAPI.as_view()),
-    path('review/marker/list/', views.MarkerReviewListAPI.as_view()),
-    # path('review/mypage/list'),
-    # path('review/create'),
-    # path('review/delete'),
 ]
