@@ -62,6 +62,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def create_chatlog(self, message):
+        global promise
         if message[0:3] == '/약속':
             promise_time_list = message.split('/')
             if promise_time_list[6] == 'false':
@@ -83,7 +84,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         ChatLog.objects.create(
             room=ChatRoom.objects.get(room_name=self.room_name),
             user=get_object_or_404(User, id=self.scope['user'].id),
-            content=message
+            content=message + "/" + str(promise.id)
         )
 
     @database_sync_to_async

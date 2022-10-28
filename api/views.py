@@ -124,6 +124,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def perform_create(self, serializer):
+        print(self.request.data)
         serializer.save(author=self.request.user)
 
     @action(detail=False, methods=['get'])
