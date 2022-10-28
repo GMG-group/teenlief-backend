@@ -112,6 +112,12 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+    def retrieve(self, request, pk=None):
+        queryset = Review.objects.filter(helper_id=pk)
+        serializer = ReviewSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
     @action(detail=False, methods=['get'])
     def my(self, request):
         user = request.user
