@@ -55,7 +55,7 @@ class PointSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(read_only=True)
+    author = UserSerializer(read_only=True)
 
     class Meta:
         model = Review
@@ -70,6 +70,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         helperInfo.total += validated_data['stars']
         helperInfo.score = helperInfo.total / helperInfo.review_count
         helperInfo.save()
+
+        promise = validated_data['promise']
+        promise.reviewed = True
+        promise.save()
 
         return review
 
