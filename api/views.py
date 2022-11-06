@@ -169,7 +169,6 @@ class HelperInfoViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 class CertificateAPI(APIView):
     def post(self, request, *args, **kwargs):
         user = request.user
-        print(user)
         user.certificated = True
         user.save()
         res = UserSerializer(user)
