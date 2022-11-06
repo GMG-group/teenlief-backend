@@ -45,6 +45,9 @@ class PromiseViewSet(viewsets.ModelViewSet):
     queryset = Promise.objects.all()
     serializer_class = PromiseSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(helper=self.request.user)
+
     @action(detail=False, methods=['get'])
     def unreviewed(self, request):
         user = request.user
