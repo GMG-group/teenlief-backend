@@ -81,10 +81,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
                 promise = Promise.objects.create(time=promise_time, teen=teen, helper=helper, marker_id=promise_time_list[6])
 
+                ChatLog.objects.create(
+                    room=ChatRoom.objects.get(room_name=self.room_name),
+                    user=get_object_or_404(User, id=self.scope['user'].id),
+                    content=message + "/" + str(promise.id)
+                )
         ChatLog.objects.create(
             room=ChatRoom.objects.get(room_name=self.room_name),
             user=get_object_or_404(User, id=self.scope['user'].id),
-            content=message + "/" + str(promise.id)
+            content=message
         )
 
     @database_sync_to_async
