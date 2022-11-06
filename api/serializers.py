@@ -6,10 +6,12 @@ from api.models import Marker, Promise, Tag, Shelter, Review, PointLog, HelperIn
 
 class PromiseSerializer(serializers.ModelSerializer):
     reviewed = serializers.BooleanField(read_only=True)
+    helper = UserSerializer(read_only=True)
 
     class Meta:
         model = Promise
         fields = '__all__'
+        read_only_fields = ['helper']
 
 
 class MarkerSerializer(serializers.ModelSerializer):
