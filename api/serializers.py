@@ -63,9 +63,15 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ['author']
 
     def create(self, validated_data):
+        print(validated_data)
         review = Review.objects.create(**validated_data)
         helper = validated_data['helper']
-        helperInfo = helper.helper_info_helper
+
+        helperInfo = HelperInfo.objects.filter(helper=helper)[0]
+
+        if not helperInfo:
+            helperInfo = HelperInfo.objects.create(helper=helper, review_count=0, score=0, total=0)
+
         helperInfo.review_count += 1
         helperInfo.total += validated_data['stars']
         helperInfo.score = helperInfo.total / helperInfo.review_count
