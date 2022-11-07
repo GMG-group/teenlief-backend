@@ -199,7 +199,7 @@ class CertificateAPI(APIView):
             client.messages.create(
                 body=f'Your verification code is {code}',
                 from_='+18085152411',
-                to='+8201089484146'
+                to=f'+82{phone}'
             )
 
             return Response({"status": "success"}, status=status.HTTP_200_OK)
@@ -225,6 +225,7 @@ class VerifyCertificateAPI(APIView):
                     user_certificate_data.save()
 
                     user.certificated = True
+                    user.phone_number = user_certificate_data.phone
                     user.save()
 
                     return Response({"status": "VERIFY_SUCCESS"}, status=status.HTTP_200_OK)
