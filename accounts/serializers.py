@@ -24,7 +24,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.save(update_fields=['first_name', 'gender', 'role'])
 
         if str(user.role) == 'Helper':
-            helperInfo = HelperInfo(helper=user, score=0, review_count=0)
+            helperInfo = HelperInfo(helper=user, score=0, review_count=0, total=0)
             helperInfo.save()
 
 
