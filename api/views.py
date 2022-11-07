@@ -188,9 +188,10 @@ class CertificateAPI(APIView):
             code = random_string
             expire_date = datetime.datetime.now() + datetime.timedelta(minutes=3) + datetime.timedelta(hours=9)
             phone = request.data['phone']
+            gender = request.data['gender']
 
             # 인증 관련 정보를 db에 추가
-            CertificateCode.objects.create(user=user, code=code, expire_date=expire_date, status='CR', phone=phone)
+            CertificateCode.objects.create(user=user, code=code, expire_date=expire_date, status='CR', phone=phone, gender=gender)
 
             account_sid = get_env_variable("TWILIO_SID")
             auth_token = get_env_variable("TWILIO_TOKEN")
@@ -229,6 +230,7 @@ class VerifyCertificateAPI(APIView):
 
                     user.certificated = True
                     user.phone_number = user_certificate_data.phone
+                    user.gender = user_certificate_data.gender
                     user.save()
 
                     return Response({"status": "VERIFY_SUCCESS"}, status=status.HTTP_200_OK)

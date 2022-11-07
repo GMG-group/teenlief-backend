@@ -90,3 +90,4 @@ class CertificateCode(models.Model):
     status = models.CharField(max_length=2)
     code = models.CharField(max_length=6)
     phone = models.CharField(max_length=20)
+    gender = models.CharField(max_length=1)
