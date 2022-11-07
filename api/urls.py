@@ -18,4 +18,5 @@ urlpatterns = [
     path('chat/', include('chat.urls')),
     path('check-user-marker-exists/<int:user_id>/', views.CheckUserMarkerExistsAPI.as_view()),
     path('certificate/', views.CertificateAPI.as_view()),
+    path('certificate/verify/', views.VerifyCertificateAPI.as_view()),
 ]
