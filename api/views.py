@@ -196,11 +196,14 @@ class CertificateAPI(APIView):
             auth_token = get_env_variable("TWILIO_TOKEN")
             client = Client(account_sid, auth_token)
 
-            client.messages.create(
-                body=f'Your verification code is {code}',
-                from_='+18085152411',
-                to=f'+82{phone}'
-            )
+            try:
+                client.messages.create(
+                    body=f'Your verification code is {code}',
+                    from_='+18085152411',
+                    to=f'+82{phone}'
+                )
+            except:
+                return Response({"status": "TWILIO_ERROR"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             return Response({"status": "success"}, status=status.HTTP_200_OK)
         else:
