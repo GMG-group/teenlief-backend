@@ -145,7 +145,10 @@ class ReviewViewSet(viewsets.ModelViewSet):
         helperInfo = HelperInfo.objects.get(helper=instance.helper)
         helperInfo.total -= instance.stars
         helperInfo.review_count -= 1
-        helperInfo.score = helperInfo.total / helperInfo.review_count
+        if helperInfo.review_count == 0:
+            helperInfo.score = 0
+        else:
+            helperInfo.score = helperInfo.total / helperInfo.review_count
         helperInfo.save()
         instance.delete()
         
