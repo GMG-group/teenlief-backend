@@ -34,9 +34,15 @@ class MarkerSerializer(serializers.ModelSerializer):
 
 
 class MarkerSimpleSerializer(serializers.ModelSerializer):
+    helper_name = serializers.SerializerMethodField('get_helper_name')
+
     class Meta:
         model = Marker
-        fields = ('id', 'latitude', 'longitude', 'tag')
+        fields = ('id', 'latitude', 'longitude', 'tag', 'helper_name')
+
+    def get_helper_name(self, marker):
+        return marker.helper.first_name
+
 
 
 class TagSerializer(serializers.ModelSerializer):
