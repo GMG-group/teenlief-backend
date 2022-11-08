@@ -24,6 +24,11 @@ class Tag(models.Model):
 
 
 class Marker(models.Model):
+    STATUS = (
+        ('A', 'AVILABLE'),
+        ('D', 'DELETED'),
+    )
+
     longitude = models.DecimalField(max_digits=20, decimal_places=15)  # 위도
     latitude = models.DecimalField(max_digits=20, decimal_places=15)  # 경도
     address = models.CharField(max_length=255)  # 주소
@@ -32,6 +37,7 @@ class Marker(models.Model):
     helper = models.ForeignKey(User, related_name='helper', on_delete=models.CASCADE)
     tag = models.ManyToManyField(Tag)
     created_at = models.DateTimeField(auto_now_add=True)  # 올린 시간
+    status = models.CharField(max_length=1, choices=STATUS, default='A')
 
 
 class Promise(models.Model):
