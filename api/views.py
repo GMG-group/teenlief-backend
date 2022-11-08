@@ -137,15 +137,18 @@ class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    def list(self, request):
-        queryset = Review.objects.filter(author=self.request.user)
-        serializer = ReviewSerializer(queryset, many=True)
-        return Response(serializer.data)
-
     def perform_create(self, serializer):
         print(self.request.data)
         serializer.save(author=self.request.user)
 
+    def perform_destroy(self, instance):
+        helperInfo = HelperInfo.objects.get(helper=instance.helper)
+        helperInfo.total -= instance.stars
+        helperInfo.review_count -= 1
+        helperInfo.score = helperInfo.total / helperInfo.review_count
+        helperInfo.save()
+        instance.delete()
+        
     def retrieve(self, request, pk=None):
         queryset = Review.objects.filter(helper_id=pk)
         serializer = ReviewSerializer(queryset, many=True)
