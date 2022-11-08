@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = 'true'
 
 # TODO: 배포할 땐 항상 False로 변경
-DEBUG = False
+DEBUG = True
 
 
 if DEBUG:
@@ -165,7 +165,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ),
 }
@@ -191,4 +191,3 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
