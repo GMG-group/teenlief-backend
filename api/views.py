@@ -1,4 +1,5 @@
-from rest_framework import viewsets
+from django.db.models import Q
+from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.views import APIView
@@ -8,10 +9,10 @@ from rest_framework.generics import get_object_or_404
 
 from accounts.models import User
 from accounts.serializers import UserSerializer
-from api.models import Marker, Promise, Tag, Shelter, Review, PointLog
+from api.models import Marker, Promise, Tag, Shelter, Review, PointLog, HelperInfo
 from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, \
     ReviewSerializer, \
-    ShelterSerializer, PointSerializer, MyMarkerSerializer
+    ShelterSerializer, PointSerializer, MyMarkerSerializer, HelperInfoSerializer
 
 from django.shortcuts import get_object_or_404
 
@@ -35,13 +36,29 @@ class MarkerViewSet(viewsets.ModelViewSet):
             serializer = serializer_class(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = serializer_class(queryset, many=True, context={'request': request}) # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
+        serializer = serializer_class(queryset, many=True, context={
+            'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
         return Response(serializer.data)
 
 
 class PromiseViewSet(viewsets.ModelViewSet):
     queryset = Promise.objects.all()
     serializer_class = PromiseSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(helper=self.request.user)
+
+    @action(detail=False, methods=['get'])
+    def unreviewed(self, request):
+        user = request.user
+        queryset = self.filter_queryset(self.get_queryset().filter(Q(teen=user) & Q(reviewed=False)))
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.serializer_class(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.serializer_class(queryset, many=True, context={'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
+        return Response(serializer.data)
 
 
 class MarkerSimpleViewSet(viewsets.ModelViewSet):
@@ -109,10 +126,40 @@ class ReviewViewSet(viewsets.ModelViewSet):
         serializer = ReviewSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    def perform_create(self, serializer):
+        print(self.request.data)
+        serializer.save(author=self.request.user)
+
     def retrieve(self, request, pk=None):
-        user = get_object_or_404(User, pk=pk)
-        queryset = Review.objects.filter(helper=user).filter(todo_review=True)
+        queryset = Review.objects.filter(helper_id=pk)
         serializer = ReviewSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+    @action(detail=False, methods=['get'])
+    def my(self, request):
+        user = request.user
+        if user.role == "Helper":
+            queryset = self.filter_queryset(self.get_queryset().filter(helper=user))
+        else:
+            queryset = self.filter_queryset(self.get_queryset().filter(author=user))
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.serializer_class(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.serializer_class(queryset, many=True, context={'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
+        return Response(serializer.data)
+
+
+class HelperInfoViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    queryset = HelperInfo.objects.all()
+    serializer_class = HelperInfoSerializer
+
+    def retrieve(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        queryset = HelperInfo.objects.get(helper=user)
+        serializer = HelperInfoSerializer(queryset)
         return Response(serializer.data)
 
     def perform_create(self, serializer):
@@ -122,7 +169,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class CertificateAPI(APIView):
     def post(self, request, *args, **kwargs):
         user = request.user
-        print(user)
         user.certificated = True
         user.save()
         res = UserSerializer(user)
