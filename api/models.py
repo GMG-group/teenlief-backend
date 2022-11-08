@@ -75,3 +75,19 @@ class HelperInfo(models.Model):
     score = models.DecimalField(max_digits=3, decimal_places=2)
     review_count = models.IntegerField()
     total = models.DecimalField(max_digits=20, decimal_places=2)
+
+
+class CertificateCode(models.Model):
+    """
+    status: [
+        VE: 인증 성공
+        DE: 인증 실패
+        CR: 인증 예정
+    ]
+    """
+    user = models.ForeignKey(User, related_name='certificate_user', on_delete=models.PROTECT)
+    expire_date = models.DateTimeField()
+    status = models.CharField(max_length=2)
+    code = models.CharField(max_length=6)
+    phone = models.CharField(max_length=20)
+    gender = models.CharField(max_length=1)

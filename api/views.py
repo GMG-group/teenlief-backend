@@ -1,5 +1,9 @@
+import datetime
+import pytz
+import random
+
 from django.db.models import Q
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.views import APIView
@@ -9,7 +13,7 @@ from rest_framework.generics import get_object_or_404
 
 from accounts.models import User
 from accounts.serializers import UserSerializer
-from api.models import Marker, Promise, Tag, Shelter, Review, PointLog, HelperInfo
+from api.models import Marker, Promise, Tag, Shelter, Review, PointLog, HelperInfo, CertificateCode
 from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSerializer, TagSerializer, \
     ReviewSerializer, \
     ShelterSerializer, PointSerializer, MyMarkerSerializer, HelperInfoSerializer
@@ -17,6 +21,9 @@ from api.serializers import MarkerSerializer, PromiseSerializer, MarkerSimpleSer
 from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import action
+from twilio.rest import Client
+
+from teenlief.settings import get_env_variable
 
 
 class MarkerViewSet(viewsets.ModelViewSet):
@@ -57,7 +64,8 @@ class PromiseViewSet(viewsets.ModelViewSet):
             serializer = self.serializer_class(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = self.serializer_class(queryset, many=True, context={'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
+        serializer = self.serializer_class(queryset, many=True, context={
+            'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
         return Response(serializer.data)
 
 
@@ -99,9 +107,10 @@ class PointViewSet(viewsets.ModelViewSet):
 
         if self.request.user == sender:
             if sender == receiver:
-                serializer.save(sender=sender, receiver=receiver, point=point)
-                receiver.point += point
-                receiver.save()
+                if serializer.is_valid():
+                    serializer.save(sender=sender, receiver=receiver, point=point)
+                    receiver.point += point
+                    receiver.save()
             else:
                 if sender.point >= point:
                     if serializer.is_valid():
@@ -148,7 +157,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
             serializer = self.serializer_class(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = self.serializer_class(queryset, many=True, context={'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
+        serializer = self.serializer_class(queryset, many=True, context={
+            'request': request})  # context 안붙이면 full url로 안나옴 https://stackoverflow.com/a/69900733
         return Response(serializer.data)
 
 
@@ -168,8 +178,73 @@ class HelperInfoViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 
 class CertificateAPI(APIView):
     def post(self, request, *args, **kwargs):
-        user = request.user
-        user.certificated = True
-        user.save()
-        res = UserSerializer(user)
-        return Response(res.data)
+        if request.user:
+            user_certificate_data = CertificateCode.objects.filter(user=request.user, status="CR")
+            if user_certificate_data:
+                user_certificate_data = user_certificate_data.first()
+                if user_certificate_data.status != 'DE':
+                    user_certificate_data.status = 'DE'
+                    user_certificate_data.save()
+
+            # 6자리 랜덤 문자 생성
+            random_string = [str(random.randint(0, 9)) for _ in range(6)]
+            random_string = "".join(random_string)
+
+            user = request.user
+            code = random_string
+            expire_date = datetime.datetime.now() + datetime.timedelta(minutes=3) + datetime.timedelta(hours=9)
+            phone = request.data['phone']
+            gender = request.data['gender']
+
+            # 인증 관련 정보를 db에 추가
+            CertificateCode.objects.create(user=user, code=code, expire_date=expire_date, status='CR', phone=phone, gender=gender)
+
+            account_sid = get_env_variable("TWILIO_SID")
+            auth_token = get_env_variable("TWILIO_TOKEN")
+            client = Client(account_sid, auth_token)
+
+            try:
+                client.messages.create(
+                    body=f'Your verification code is {code}',
+                    from_='+18085152411',
+                    to=f'+82{phone}'
+                )
+            except:
+                return Response({"status": "TWILIO_ERROR"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            return Response({"status": "success"}, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+class VerifyCertificateAPI(APIView):
+    def post(self, request, *args, **kwargs):
+        if request.user:
+            user = request.user
+            receved_code = request.data['code']
+            user_certificate_data = CertificateCode.objects.filter(user=request.user, status="CR").first()
+
+            if user_certificate_data:
+                expire_date = user_certificate_data.expire_date
+                from django.utils import timezone
+                now = timezone.now() + datetime.timedelta(hours=9)
+
+                print(expire_date, now)
+                if user_certificate_data.code == receved_code and expire_date >= now:
+                    user_certificate_data.status = 'VE'
+                    user_certificate_data.save()
+
+                    user.certificated = True
+                    user.phone_number = user_certificate_data.phone
+                    user.gender = user_certificate_data.gender
+                    user.save()
+
+                    return Response({"status": "VERIFY_SUCCESS"}, status=status.HTTP_200_OK)
+
+                else:
+                    return Response({"status": "CODE_EXPIRED"}, status=status.HTTP_409_CONFLICT)
+            else:
+                return Response({"status": "NO_CERTIFICATE_DATA_IN_DB"}, status=status.HTTP_409_CONFLICT)
+
+        else:
+            return Response({"status": "AUTHENTICATION_FAILED"}, status=status.HTTP_403_FORBIDDEN)
