@@ -148,6 +148,12 @@ class ReviewViewSet(viewsets.ModelViewSet):
         helperInfo.score = helperInfo.total / helperInfo.review_count
         helperInfo.save()
         instance.delete()
+        
+    def retrieve(self, request, pk=None):
+        queryset = Review.objects.filter(helper_id=pk)
+        serializer = ReviewSerializer(queryset, many=True)
+        return Response(serializer.data)
+
 
     @action(detail=False, methods=['get'])
     def my(self, request):

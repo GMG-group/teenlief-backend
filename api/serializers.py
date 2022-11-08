@@ -88,9 +88,15 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class MyMarkerSerializer(serializers.ModelSerializer):
+    promise_count = serializers.SerializerMethodField('get_promise_count')
+
     class Meta:
         model = Marker
         fields = '__all__'
+
+    def get_promise_count(self, marker):
+        return marker.promises.all().count()
+
 
 
 class HelperInfoSerializer(serializers.ModelSerializer):
