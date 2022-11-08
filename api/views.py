@@ -30,8 +30,15 @@ class MarkerViewSet(viewsets.ModelViewSet):
     queryset = Marker.objects.all()
     serializer_class = MarkerSerializer
 
+    def filter_queryset(self, queryset):
+        return queryset.filter(status='A')
+
     def perform_create(self, serializer):
         serializer.save(helper=self.request.user)
+
+    def perform_destroy(self, instance):
+        instance.status = 'D'
+        instance.save()
 
     @action(detail=False, methods=['get'])
     def my(self, request):
