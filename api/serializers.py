@@ -17,7 +17,6 @@ class PromiseSerializer(serializers.ModelSerializer):
 class MarkerSerializer(serializers.ModelSerializer):
     promises = PromiseSerializer(read_only=True, many=True)
     helper = UserSerializer(read_only=True)
-    status = serializers.CharField(read_only=True)
 
     class Meta:
         model = Marker
